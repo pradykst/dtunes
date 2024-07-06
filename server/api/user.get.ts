@@ -9,8 +9,10 @@ export default defineEventHandler(async (event) => {
     console.log(query)
 
     const user = await prisma.user.findFirst({
+        //@todo null find
         where: {
-            username: query.username
+            username: query.username,
+            password: query.password
 
 
         },

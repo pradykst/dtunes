@@ -1,39 +1,64 @@
-<template>
-    <h1>all items</h1>
-    <UAccordion :items="items" />
-    
-  </template>
-
 <script setup lang="ts">
-const items = [{
-  label: 'Getting Started',
-  icon: 'i-heroicons-information-circle',
-  defaultOpen: true,    
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}, {
-  label: 'Installation',
-  icon: 'i-heroicons-arrow-down-tray',
-  disabled: true,
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}, {
-  label: 'Theming',
-  icon: 'i-heroicons-eye-dropper',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}, {
-  label: 'Layouts',
-  icon: 'i-heroicons-rectangle-group',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}, {
-  label: 'Components',
-  icon: 'i-heroicons-square-3-stack-3d',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}, {
-  label: 'Utilities',
-  icon: 'i-heroicons-wrench-screwdriver',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
-}]
+import { object, string, type InferType } from 'yup'
+import type { FormSubmitEvent } from '#ui/types'
+
+const schema = object({
+  // email: string().email('Invalid email').required('Required'),
+  username: string().required('Required'),
+  password: string()
+    .min(8, 'Must be at least 8 characters')
+    .required('Required')
+})
+
+type Schema = InferType<typeof schema>
+
+const state = reactive({
+  // email: undefined,
+  username: undefined,
+  password: undefined
+})
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  // Do something with event.data
+  console.log(event.data)
+  const { data, status, error, refresh } = await useFetch('/api/user', {
+    method: "GET",
+    query: { username: event.data.username, password: event.data.password }
+  })
+  console.log("data:", data)
+  console.log("status:", status)
+  console.log("error:", error)
+  console.log("refresh:", refresh)
+
+  if (data.value?.id) {
+    await navigateTo('/home')
+
+  }
+  else {
+    alert("invalid login credentials")
+  }
+
+
+}
 </script>
 
+<template>
+  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Username" name="username">
+      <UInput v-model="state.username" />
+    </UFormGroup>
+
+    <UFormGroup label="Password" name="password">
+      <UInput v-model="state.password" type="password" />
+    </UFormGroup>
+
+    <UButton type="submit">
+      Submit
+    </UButton>
+
+    New User
+    <UButton to="/register">Register</UButton>
 
 
-  
+  </UForm>
+</template>

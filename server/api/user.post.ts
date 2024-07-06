@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     const user = await prisma.user.create({
         data: body
     })
-    return {status:'ok',user}
+    return user
 
     
 

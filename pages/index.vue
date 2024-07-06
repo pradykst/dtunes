@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <h1>Index fad</h1>
     DATA:
     {{data}}
@@ -19,4 +19,9 @@ console.log('data:',data)
 // const { data } = await useFetch('https://api.restful-api.dev/objects')
 
 
-</script>
+</script> -->
+
+<template>
+  <UButton to="/login" >Login</UButton>
+</template>
+
