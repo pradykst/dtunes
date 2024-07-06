@@ -1,0 +1,101 @@
+datasource db {
+    url      = env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id              Int               @id @default(autoincrement())
+    username        String            @unique
+    password        String
+    name            String
+    photoURL        String
+    playlist        Playlist[]
+    role            Role[]
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    Content         Content[]
+    AccessedContent AccessedContent[]
+
+    UserContent UserContent[]
+}
+
+model Content {
+    id                Int              @id @default(autoincrement())
+    title             String
+    creator           User             @relation(fields: [creatorId], references: [id])
+    language          String
+    transcript        String
+    highlight         Segment[]
+    play              Boolean          @default(false)
+    genre             String
+    duration          DateTime
+    thumbnail         String
+    url               String
+    createdAt         DateTime         @default(now())
+    updatedAt         DateTime         @updatedAt
+    creatorId         Int
+    Playlist          Playlist?        @relation(fields: [playlistId], references: [id])
+    playlistId        Int?
+    AccessedContent   AccessedContent? @relation(fields: [accessedContentId], references: [id])
+    accessedContentId Int?
+    UserContent       UserContent[]
+}
+
+model Playlist {
+    id        Int       @id @default(autoincrement())
+    name      String
+    creator   String
+    totalTime DateTime
+    thumbnail String
+    content   Content[]
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    User   User? @relation(fields: [userId], references: [id])
+    userId Int?
+}
+
+model Role {
+    id          Int    @id @default(autoincrement())
+    name        String
+    description String
+
+    User   User? @relation(fields: [userId], references: [id])
+    userId Int?
+}
+
+model AccessedContent {
+    id               Int       @id @default(autoincrement())
+    name             String
+    content          Content[]
+    user             User      @relation(fields: [userId], references: [id])
+    startTime        DateTime
+    endTime          DateTime
+    createdAt        DateTime  @default(now())
+    currentTimestamp DateTime
+    play             Boolean   @default(false)
+
+    userId Int
+}
+
+model Segment {
+    id    Int @id @default(autoincrement())
+    start Int
+    end   Int
+
+    Content   Content? @relation(fields: [contentId], references: [id])
+    contentId Int?
+}
+
+model UserContent {
+    id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    content   Content  @relation(fields: [contentId], references: [id])
+    like      Boolean?
+    userId    Int
+    contentId Int
+}
