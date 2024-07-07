@@ -30,7 +30,7 @@ model Content {
     creator           User             @relation(fields: [creatorId], references: [id])
     language          String
     transcript        String?
-    highlight         Segment[]        
+    highlight         Segment[]
     play              Boolean          @default(false)
     genre             String
     duration          DateTime?
@@ -48,16 +48,14 @@ model Content {
 
 model Playlist {
     id        Int       @id @default(autoincrement())
-    name      String
-    creator   String
+    name      String    @unique
+    creator   User      @relation(fields: [userId], references: [id])
     totalTime DateTime
-    thumbnail String
+    thumbnail String?
     content   Content[]
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-
-    User   User? @relation(fields: [userId], references: [id])
-    userId Int?
+    userId    Int
 }
 
 model Role {
