@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Content" ALTER COLUMN "transcript" DROP NOT NULL,
+ALTER COLUMN "duration" DROP NOT NULL,
+ALTER COLUMN "thumbnail" DROP NOT NULL,
+ALTER COLUMN "url" DROP NOT NULL;
