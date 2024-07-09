@@ -2,6 +2,7 @@
 import { object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
 
+
 const schema = object({
   // email: string().email('Invalid email').required('Required'),
   username: string().required('Required'),
@@ -31,7 +32,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log("refresh:", refresh)
 
   if (data.value?.id) {
-    await navigateTo('/home')
+    const uname = useCookie('username')
+    uname.value=event.data.username
+    const pwd = useCookie('password')
+    pwd.value=event.data.password
+
+    await navigateTo('/')
 
   }
   else {

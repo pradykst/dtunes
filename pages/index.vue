@@ -1,6 +1,6 @@
 <template>
   <!-- <h1>Index fad</h1> -->
-  <audio id="audio" src="" controls></audio>  
+
   <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid" autocomplete="off"
     :ui="{ icon: { trailing: { pointer: '' } } }">
     <template #trailing>
@@ -8,13 +8,23 @@
         @click="q = ''" />
     </template>
   </UInput>
-  <UButton block  @click="search":ui="{ rounded: 'rounded-full' }">Search</UButton>
-  <UButton to="/login">Login</UButton>
-<!-- {{ searchResult }} -->
-  <UTable :columns="columns" :rows=searchResult @select="select"/>
+  <UButton block @click="search" :ui="{ rounded: 'rounded-full' }">Search</UButton>
+  <!-- search on enter key -->
+
+  <UButton v-if="!useLogin()" to="/login">Login</UButton>
+  <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
+  <!-- {{ searchResult }} -->
+  <UTable :columns="columns" :rows=searchResult @select="select" />
 </template>
 
 <script setup lang="ts">
+import useLogin from '~/composables/useLogin';
+
+const content = useState('content', () => {})
+const contentSearchTerm = useState('contentSearchTerm', () => {})
+const contentSearchResult = useState('searchResult', () => {})
+
+
 const columns = [{
   key: 'title',
   label: 'Title'
@@ -44,12 +54,57 @@ async function search() {
   })
   console.log('data:', data.value.data)
   searchResult.value = data.value.data
- }
+  //also save in state so that page navigation doesnt clear
+  contentSearchTerm.value=q.value
+  contentSearchResult.value=data.value.data
 
- function select (row) {
+}
+
+onMounted(async()=>{
+  q.value=contentSearchTerm.value
+  searchResult.value=contentSearchResult.value
+    
+  })
+  
+
+async function select(row) {
   // alert(row.preview)
-  const audio = document.getElementById("audio")
-  audio.src = row.preview
-  audio?.play()
+
+  //user logged in
+  if (useLogin()) {
+
+
+    // const audio = document.getElementById("audio")
+    // audio.src = row.preview
+    // audio?.play()
+
+    const { data, status, error, refresh } = await useFetch('/api/content', {
+      method: "POST",
+      body: {
+        name: useCookie('username').value,
+        password: useCookie('password').value,
+        content: {
+          title: row.title,
+          artist: row.artist.name,
+          language: '',
+          genre: '',
+          url: row.preview
+        }
+      }
+    })
+    console.log(data.value)
+    content.value=data.value
+    navigateTo('/content/'+data.value.id)
+}
+else{
+  navigateTo('/login')
+}
+}
+
+function logout(){
+  useCookie('username').value=''
+  useCookie('password').value=''
+  console.log('logged out ')
+
 }
 </script>

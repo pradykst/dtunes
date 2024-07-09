@@ -33,28 +33,28 @@ export default defineEventHandler(async (event) => {
     console.log(userrole)
 
     if(userrole){
-        //@todo why is explicit id required in creation where as in retrival we can give the object directly
         body.content.creatorId = user?.id
-        const content = await prisma.content.create({
-            data: body.content
-        })
-        return content
-
     }
-
-    else{
-        return {"messaga":"not authorised"}
-    }
-
-  
-
-
-
-
-
-
 
     
+    let content = await prisma.content.findFirst({
+        //@todo null find
+        where: {
+            title: body.content.title,
+        }
+    });
+
+    if(!content){
+
+    
+        content = await prisma.content.create({
+            data: body.content
+        })
+
+
+    }
+
+    return content
 
 
 }
