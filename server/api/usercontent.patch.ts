@@ -9,24 +9,35 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     console.log(body)
 
-    const usercontent = await prisma.userContent.findFirst({
+    const user = await prisma.user.findFirst({
         where: {
-            // username:body.username,
-            // password:body.password
+            username:body.name,
+            password:body.password
 
 
         },
     });
 
-    if(usercontent){
+    const playlist = await prisma.playlist.findFirst({
+        where: {
+            userId:user?.id,
+            name:body.playlistName,
+
+
+        },
+    });
+
+
+
+    if(user && playlist){
 
     
     const update = await prisma.userContent.update({
         where: {
-            id:usercontent.id
+            id:body.userContentId
         },
         data: {
-            // password: body.newpwd
+            playlistId:playlist.id
         }
     })
     return { status: 'ok', update }

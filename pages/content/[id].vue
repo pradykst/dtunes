@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 const content = useState('content', () => { })
+const userContent = useState('userContent', () => { })
 
 // const props = defineProps(['content'])
 
@@ -51,7 +52,11 @@ async function like(flag){
         like: flag
 
     }
+
   })
+   userContent.value=data.value
+
+
     
 
 }

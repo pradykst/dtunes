@@ -13,12 +13,11 @@ model User {
     password        String
     name            String
     photoURL        String?
-    playlist        Playlist[]
+    playlists       Playlist[]
     createdAt       DateTime          @default(now())
     updatedAt       DateTime          @updatedAt
     Content         Content[]
     AccessedContent AccessedContent[]
-
     UserContent UserContent[]
     Role        Role[]
     UserRole    UserRole[]
@@ -40,8 +39,6 @@ model Content {
     createdAt         DateTime         @default(now())
     updatedAt         DateTime         @updatedAt
     creatorId         Int?
-    Playlist          Playlist?        @relation(fields: [playlistId], references: [id])
-    playlistId        Int?
     AccessedContent   AccessedContent? @relation(fields: [accessedContentId], references: [id])
     accessedContentId Int?
     UserContent       UserContent[]
@@ -51,12 +48,13 @@ model Playlist {
     id        Int       @id @default(autoincrement())
     name      String    @unique
     creator   User      @relation(fields: [userId], references: [id])
-    totalTime DateTime
+    totalTime DateTime?
     thumbnail String?
-    content   Content[]
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     userId    Int
+
+    UserContent UserContent[]
 }
 
 model Role {
@@ -101,10 +99,12 @@ model Segment {
 }
 
 model UserContent {
-    id        Int      @id @default(autoincrement())
-    user      User     @relation(fields: [userId], references: [id])
-    content   Content  @relation(fields: [contentId], references: [id])
-    like      Boolean?
-    userId    Int
-    contentId Int
+    id         Int       @id @default(autoincrement())
+    user       User      @relation(fields: [userId], references: [id])
+    content    Content   @relation(fields: [contentId], references: [id])
+    like       Boolean?
+    userId     Int
+    contentId  Int
+    playlist   Playlist? @relation(fields: [playlistId], references: [id])
+    playlistId Int?
 }

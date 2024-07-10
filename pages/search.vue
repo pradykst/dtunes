@@ -1,44 +1,28 @@
 <template>
+  <!-- <h1>Index fad</h1> -->
 
-
-
-
+  <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid" autocomplete="off"
+    :ui="{ icon: { trailing: { pointer: '' } } }">
+    <template #trailing>
+      <UButton v-show="q !== ''" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid" :padded="false"
+        @click="q = ''" />
+    </template>
+  </UInput>
+  <UButton block @click="search" :ui="{ rounded: 'rounded-full' }">Search</UButton>
+  <!-- search on enter key -->
 
   <UButton v-if="!useLogin()" to="/login">Login</UButton>
   <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
-
-  <h1> DTunes</h1>
-
-
-  <div>
-    <UButton label="Open" @click="isOpen = true" />
-
-    <USlideover v-model="isOpen">
-      <div class="p-4 flex-1">
-        <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-x-mark-20-solid"
-          class="flex sm:hidden absolute end-5 top-5 z-10" square padded @click="isOpen = false" />
-          <UButton to="/search" icon="i-heroicons-magnifying-glass" size="xl" color="primary" square variant="solid">Search</UButton>
-        <Placeholder class="h-full" />
-      </div>
-    </USlideover>
-  </div>
-
-
-
-
+  <!-- {{ searchResult }} -->
+  <UTable :columns="columns" :rows=searchResult @select="select" />
 </template>
 
 <script setup lang="ts">
-
-
-const isOpen = ref(false)
-
-
 import useLogin from '~/composables/useLogin';
 
-const content = useState('content', () => { })
-const contentSearchTerm = useState('contentSearchTerm', () => { })
-const contentSearchResult = useState('searchResult', () => { })
+const content = useState('content', () => {})
+const contentSearchTerm = useState('contentSearchTerm', () => {})
+const contentSearchResult = useState('searchResult', () => {})
 
 
 const columns = [{
@@ -71,17 +55,17 @@ async function search() {
   console.log('data:', data.value.data)
   searchResult.value = data.value.data
   //also save in state so that page navigation doesnt clear
-  contentSearchTerm.value = q.value
-  contentSearchResult.value = data.value.data
+  contentSearchTerm.value=q.value
+  contentSearchResult.value=data.value.data
 
 }
 
-onMounted(async () => {
-  q.value = contentSearchTerm.value
-  searchResult.value = contentSearchResult.value
-
-})
-
+onMounted(async()=>{
+  q.value=contentSearchTerm.value
+  searchResult.value=contentSearchResult.value
+    
+  })
+  
 
 async function select(row) {
   // alert(row.preview)
@@ -109,17 +93,17 @@ async function select(row) {
       }
     })
     console.log(data.value)
-    content.value = data.value
-    navigateTo('/content/' + data.value.id)
-  }
-  else {
-    navigateTo('/login')
-  }
+    content.value=data.value
+    navigateTo('/content/'+data.value.id)
+}
+else{
+  navigateTo('/login')
+}
 }
 
-function logout() {
-  useCookie('username').value = ''
-  useCookie('password').value = ''
+function logout(){
+  useCookie('username').value=''
+  useCookie('password').value=''
   console.log('logged out ')
 
 }
