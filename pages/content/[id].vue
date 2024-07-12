@@ -16,7 +16,9 @@
 
     <UButton @click='playlist' icon="i-heroicons-plus" size="xl" color="yellow" square variant="solid" />
 
+    <p>
 
+    </p>
 
 
 
@@ -64,7 +66,7 @@ async function like(flag){
 
 
 function playlist(){
-    navigateTo('/playlist')
+    navigateTo('/playlist/')
 
 
 }

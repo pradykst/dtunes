@@ -8,25 +8,41 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     console.log(query)
 
-    const usercontent = await prisma.userContent.findFirst({
+    const user = await prisma.user.findFirst({
         //@todo null find
         where: {
-            // username: query.username,
-            // password: query.password
+            username: query.name,
+            password: query.password
 
 
         },
     });
 
 
-    if (!usercontent) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'history is empty',
-        });
+
+    if (user) {
+
+        const usercontents=await prisma.userContent.findMany({
+
+            where:{
+                like:query.like == 'true',
+                userId:user.id
+            },
+            include:{
+                content:true
+            }
+        })
+
+        return usercontents
+
+
     }
-    else {
-        return usercontent
+
+    else{
+        return {
+            'status':'unauthorised'
+        }
     }
+
 }
 )

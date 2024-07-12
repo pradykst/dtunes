@@ -23,6 +23,50 @@
     </USlideover>
   </div>
 
+  <div>
+    <p>Playlists</p>
+    
+    <br>
+
+    <UCard>
+
+    <template #header>
+      <Placeholder class="h-8" />
+      Liked Songs
+    </template>
+
+    <Placeholder class="h-32" />
+    <UButton v-if='useLogin()' to="/playlist/liked">Show</UButton>
+
+  </UCard>  
+
+  <br>
+ 
+
+  <UCard>
+    <template #header>
+      <Placeholder class="h-8" />
+      Disliked songs
+    </template>
+
+    <Placeholder class="h-32" />
+    <UButton v-if='useLogin()' to="/playlist/disliked">Show</UButton>
+
+  
+  </UCard>  
+  <br>
+  <UCard>
+    <template #header>
+      Other Playlists
+      <Placeholder class="h-8" />
+    </template>
+
+    <Placeholder class="h-32" />
+    <UButton v-if='useLogin()' to="playlist/playlists">Other</UButton>
+
+  </UCard>  
+  </div>
+
 
 
 
@@ -79,6 +123,7 @@ async function search() {
 onMounted(async () => {
   q.value = contentSearchTerm.value
   searchResult.value = contentSearchResult.value
+
 
 })
 
