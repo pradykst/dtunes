@@ -1,6 +1,11 @@
 <template>
     Disliked
 
+    <div>
+    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play</UButton>
+  </div>
+
+
     <UCard v-for="usercontent in server_usercontent">
         <p>{{ usercontent.content.title }}</p>
         <p>{{ usercontent.content.artist }}</p>
@@ -29,5 +34,9 @@ const { data: server_usercontent, status, error, refresh, clear } = await useAsy
 
     })
 )
+
+function playPlaylist() {
+
+}
 
 </script>

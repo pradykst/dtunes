@@ -1,6 +1,11 @@
 <template>
     Liked
 
+    <div>
+    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play</UButton>
+  </div>
+
+
 
     <UCard v-for="usercontent in server_usercontent"> 
         <p>{{ usercontent.content.title }}</p>
@@ -30,5 +35,9 @@ const { data:server_usercontent, status, error, refresh, clear } = await useAsyn
     
   })
 )
+
+function playPlaylist() {
+
+}
 
 </script>

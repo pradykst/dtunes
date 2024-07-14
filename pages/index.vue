@@ -57,7 +57,7 @@
   <br>
   <UCard>
     <template #header>
-      Other Playlists
+      All Playlists
       <Placeholder class="h-8" />
     </template>
 

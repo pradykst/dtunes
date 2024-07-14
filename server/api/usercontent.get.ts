@@ -21,8 +21,11 @@ export default defineEventHandler(async (event) => {
 
 
     if (user) {
+        let usercontents
 
-        const usercontents=await prisma.userContent.findMany({
+        if(query.like){
+
+        usercontents=await prisma.userContent.findMany({
 
             where:{
                 like:query.like == 'true',
@@ -32,6 +35,20 @@ export default defineEventHandler(async (event) => {
                 content:true
             }
         })
+    }
+    else if(query.playlistId){
+        usercontents=await prisma.userContent.findMany({
+
+            where:{
+                playlistId:+query.playlistId ,
+                userId:user.id
+            },
+            include:{
+                content:true,
+                playlist:true,
+            }
+        })
+    }
 
         return usercontents
 
