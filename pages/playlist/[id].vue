@@ -42,6 +42,9 @@
 const song=ref('')
 const route = useRoute()
 
+
+let currentAutoPlaying = -1
+
 const { data: server_usercontent, status, error, refresh, clear } = await useAsyncData(
   'server_usercontent',
   () => $fetch('/api/usercontent', {
@@ -56,12 +59,28 @@ const { data: server_usercontent, status, error, refresh, clear } = await useAsy
 )
 
 function playPlaylist() {
+  currentAutoPlaying++
+  if(currentAutoPlaying < server_usercontent.value.length){
+    console.log(server_usercontent.value)
+    playSong(server_usercontent.value[currentAutoPlaying].content)
+  }
+  else{
+  currentAutoPlaying=-1
+  }
+
+  document.getElementById("audio").onended = function(){
+  if(currentAutoPlaying > -1)
+  playPlaylist()
+    }  
 
 }
+
+
 
 function playSong(content){
   let audio = document.getElementById("audio")
   audio.src = content.url
+  console.log("playing..",audio.src)
   audio.play()  
   song.value=content.title
 

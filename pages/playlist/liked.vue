@@ -2,7 +2,7 @@
     Liked
 
     <div>
-    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play</UButton>
+    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play All</UButton>
   </div>
 
   <div>
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 const song=ref('')
+let currentAutoPlaying = -1
 
 const { data:server_usercontent, status, error, refresh, clear } = await useAsyncData(
   'server_usercontent',
@@ -48,6 +49,20 @@ const { data:server_usercontent, status, error, refresh, clear } = await useAsyn
 )
 
 function playPlaylist() {
+  currentAutoPlaying++
+  if(currentAutoPlaying < server_usercontent.value.length){
+    console.log(server_usercontent.value)
+    playSong(server_usercontent.value[currentAutoPlaying].content)
+  }
+  else{
+  currentAutoPlaying=-1
+  }
+
+  document.getElementById("audio").onended = function(){
+  if(currentAutoPlaying > -1)
+  playPlaylist()
+    }  
+
 
 }
 

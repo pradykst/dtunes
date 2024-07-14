@@ -5,13 +5,14 @@
 
 
   <UButton v-if="!useLogin()" to="/login">Login</UButton>
-  <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
+  
 
-  <h1> DTunes</h1>
+  <h1 style="font-size:45px;font-family:'Helvetica';">DTunes</h1>
 
 
   <div>
-    <UButton label="Open" @click="isOpen = true" />
+    <div ><UButton label="Open" @click="isOpen = true" /></div>
+    
 
     <USlideover v-model="isOpen">
       <div class="p-4 flex-1">
@@ -20,11 +21,15 @@
           <UButton to="/search" icon="i-heroicons-magnifying-glass" size="xl" color="primary" square variant="solid">Search</UButton>
         <Placeholder class="h-full" />
       </div>
+      <div>
+        <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
+      </div>
     </USlideover>
   </div> 
 
-  <div>
-    <p>Playlists</p>
+  <div> 
+    <br>
+    <p style="font-size:25px;">Playlists</p>
     
     <br>
 
