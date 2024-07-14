@@ -21,7 +21,7 @@
         <Placeholder class="h-full" />
       </div>
     </USlideover>
-  </div>
+  </div> 
 
   <div>
     <p>Playlists</p>

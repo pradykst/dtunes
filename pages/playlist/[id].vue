@@ -1,10 +1,18 @@
 <template>
 
-{{  server_usercontent ? (server_usercontent[0]?.playlist?.name) : ''}}
+  {{ server_usercontent ? (server_usercontent[0]?.playlist?.name) : '' }}
 
   <div>
-    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play</UButton>
+    <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play All</UButton>
   </div>
+
+  <div>
+    <audio id="audio" src='' controls></audio>
+  </div>
+
+  <div>
+    <UBadge color="gray" variant="solid" size="lg">Now Playing {{ song }}</UBadge>
+    </div>
 
 
   <UCard v-for="usercontent in server_usercontent">
@@ -16,8 +24,11 @@
     <div v-if="usercontent.like == false">
       <UBadge color="white" variant="solid">Disliked</UBadge>
     </div>
+    <div>
+      <UButton @click="playSong(usercontent.content)">Play</UButton>
+    </div>
 
-    <audio id="audio" :src='usercontent.content.url' controls></audio>
+
 
     <Placeholder class="h-32" />
 
@@ -27,6 +38,8 @@
 </template>
 
 <script setup lang="ts">
+
+const song=ref('')
 const route = useRoute()
 
 const { data: server_usercontent, status, error, refresh, clear } = await useAsyncData(
@@ -43,6 +56,16 @@ const { data: server_usercontent, status, error, refresh, clear } = await useAsy
 )
 
 function playPlaylist() {
+
+}
+
+function playSong(content){
+  let audio = document.getElementById("audio")
+  audio.src = content.url
+  audio.play()  
+  song.value=content.title
+
+
 
 }
 
