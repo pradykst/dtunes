@@ -9,48 +9,70 @@ const query = ref('')
 function newplaylist() {
     isOpen.value = false
     const { data, status, error, refresh } = useFetch('/api/playlist', {
-    method: "POST",
-    body: {
-        name: useCookie('username').value,
-        password: useCookie('password').value,
-        playlistName:playlistName.value,
-        userContentId: userContent.value.id
+        method: "POST",
+        body: {
+            name: useCookie('username').value,
+            password: useCookie('password').value,
+            playlistName: playlistName.value,
+            userContentId: userContent.value.id
 
-    } })
+        }
+    })
 }
 
-function addToPlaylist(){
+function addToPlaylist() {
     const { data, status, error, refresh } = useFetch('/api/usercontent', {
-    method: "PATCH",
-    body: {
-        name: useCookie('username').value,
-        password: useCookie('password').value,
-        playlistName:selected.value,
-        userContentId: userContent.value.id
+        method: "PATCH",
+        body: {
+            name: useCookie('username').value,
+            password: useCookie('password').value,
+            playlistName: selected.value,
+            userContentId: userContent.value.id
 
-    } })
-    
+        }
+    })
+
 
 
 }
 
 
-const { data:server_playlists, status, error, refresh, clear } = await useAsyncData(
-  'server_playlists',
-  () => $fetch('/api/playlist',{
-    params:{
-        name: useCookie('username').value,
-        password: useCookie('password').value
+const { data: server_playlists, status, error, refresh, clear } = await useAsyncData(
+    'server_playlists',
+    () => $fetch('/api/playlist', {
+        params: {
+            name: useCookie('username').value,
+            password: useCookie('password').value
 
-    },
-    // pick:['name']
-  })
+        },
+        // pick:['name']
+    })
 )
 
 
 
-const playlists = server_playlists.value?.map(pl=>pl.name)
+const playlists = server_playlists.value?.map(pl => pl.name)
 
+const supabase = useSupabaseClient()
+
+async function test(event){
+  console.log("uploading...",event[0])
+
+
+// const contentFile = event.target.files[0]
+const contentFile = event[0]
+
+console.log(contentFile)
+
+// const { data, error } = await supabase.storage.createBucket('content')
+const { data, error } = await supabase.storage
+  .from('dtunes-content')
+  .upload('public/'+useCookie('username').value+'_'+playlistName.value, contentFile)
+
+  
+console.log(data)
+console.log(error)
+}
 
 </script>
 
@@ -58,14 +80,14 @@ const playlists = server_playlists.value?.map(pl=>pl.name)
     <UFormGroup>
         <USelectMenu v-model="selected" :query="query" :options="playlists" placeholder="Select a playlist"
             searchable />
-        <UButton @click="addToPlaylist" >Add to selected Playlist</UButton>
+        <UButton @click="addToPlaylist">Add to selected Playlist</UButton>
 
     </UFormGroup>
 
 
     <div>
         <UButton icon="i-heroicons-pencil-square" size="sm" color="primary" variant="solid" label="Create Playlist"
-            :trailing="false" @click="isOpen=true" />
+            :trailing="false" @click="isOpen = true" />
 
 
         <UModal v-model="isOpen">
@@ -78,12 +100,17 @@ const playlists = server_playlists.value?.map(pl=>pl.name)
                 <Placeholder class="h-32" />
                 Name
                 <UTextarea v-model="playlistName" />
+                Photo
+                <UInput type="file" size="sm" icon="i-heroicons-folder" @change="test" />
+
 
                 <template #footer>
                     <Placeholder class="h-8" />
                     Create Playlist
-                    <UButton icon="i-heroicons-check" size="sm" color="primary" square variant="solid" @click="newplaylist"/>
+                    <UButton icon="i-heroicons-check" size="sm" color="primary" square variant="solid"
+                        @click="newplaylist" />
                 </template>
+
             </UCard>
         </UModal>
     </div>
