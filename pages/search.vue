@@ -1,20 +1,21 @@
 <template>
   <!-- <h1>Index fad</h1> -->
+   <br>
 
   <UButtonGroup size="xl" orientation="horizontal">
- 
 
 
-  <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid" autocomplete="off"
-    :ui="{ icon: { trailing: { pointer: '' } } }" >
-    <template #trailing >
-      <UButton v-show="q !== ''" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid" :padded="false"
-        @click="q = ''" />
-    </template>
-  </UInput>
-  <UButton  @click="search" :ui="{ rounded: 'rounded-full' }">Search</UButton>
 
-</UButtonGroup>
+    <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid" autocomplete="off" 
+      :ui="{ icon: { trailing: { pointer: '' } } }">
+      <template #trailing>
+        <UButton v-show="q !== ''" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid" :padded="false"
+          @click="q = ''" />
+      </template>
+    </UInput>
+    <UButton @click="search" :ui="{ rounded: 'rounded-full' }">Search</UButton>
+
+  </UButtonGroup>
 
   <!-- <div>  
     <br>
@@ -23,12 +24,24 @@
   </div> -->
 
   <!-- {{ searchResult }} -->
-  <UTable :columns="columns" :rows=searchResult @select="select" />
+  <br>
+  <br>
+
+  <UTable v-if="!loading && (searchResult&&searchResult.length>0)" :columns="columns" :rows=searchResult @select="select" />
+
+  <div v-if="loading" class="flex items-middle space-x-4">
+    <USkeleton class="h-12 w-32"  />
+    <div class="space-y-2">
+      <USkeleton class="h-4 w-[250px]" />
+      <USkeleton class="h-4 w-[200px]" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import useLogin from '~/composables/useLogin';
 const toast = useToast()
+const loading = ref(false)
 
 const content = useState('content', () => { })
 const contentSearchTerm = useState('contentSearchTerm', () => { })
@@ -46,43 +59,45 @@ defineShortcuts({
 
 
 const columns = [{
-key: 'title',
-label: 'Title'
+  key: 'title',
+  label: 'Title'
 }, {
-key: 'artist.name',
-label: 'Artist'
+  key: 'artist.name',
+  label: 'Artist'
 }, {
-key: 'artist.picture_small',
-label: 'Image'
+  key: 'artist.picture_small',
+  label: 'Image'
 }, {
-key: 'preview',
-label: 'URL'
+  key: 'preview',
+  label: 'URL'
 }]
 const q = ref('')
 const audioSource = ref('')
 const searchResult = ref([])
 async function search() {
-const { data } = await useFetch('https://deezerdevs-deezer.p.rapidapi.com/search', {
-method: "GET",
-query: { q: q.value },
-headers: {
-'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
-'x-rapidapi-key': '51489ae2a5mshfbb0264ceb6f729p12b4c7jsn40366fca1850'
-},
-// pick: ['title']
+  loading.value = true
+  const { data } = await useFetch('https://deezerdevs-deezer.p.rapidapi.com/search', {
+    method: "GET",
+    query: { q: q.value },
+    headers: {
+      'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
+      'x-rapidapi-key': '51489ae2a5mshfbb0264ceb6f729p12b4c7jsn40366fca1850'
+    },
+    // pick: ['title']
 
-})
-console.log('data:', data.value.data)
-searchResult.value = data.value.data
-//also save in state so that page navigation doesnt clear
-contentSearchTerm.value=q.value
-contentSearchResult.value=data.value.data
+  })
+  console.log('data:', data.value.data)
+  loading.value = false
+  searchResult.value = data.value.data
+  //also save in state so that page navigation doesnt clear
+  contentSearchTerm.value = q.value
+  contentSearchResult.value = data.value.data
 
 }
 
-onMounted(async()=>{
-q.value=contentSearchTerm.value
-searchResult.value=contentSearchResult.value
+onMounted(async () => {
+  q.value = contentSearchTerm.value
+  searchResult.value = contentSearchResult.value
 
 })
 
@@ -96,43 +111,43 @@ const actions = ref([{
 
 
 async function select(row) {
-// alert(row.preview)
+  // alert(row.preview)
 
-//user logged in
-if (useLogin()) {
+  //user logged in
+  if (useLogin()) {
 
 
-// const audio = document.getElementById("audio")
-// audio.src = row.preview
-// audio?.play()
+    // const audio = document.getElementById("audio")
+    // audio.src = row.preview
+    // audio?.play()
 
-const { data, status, error, refresh } = await useFetch('/api/content', {
-method: "POST",
-body: {
-name: useCookie('username').value,
-password: useCookie('password').value,
-content: {
-title: row.title,
-artist: row.artist.name,
-language: '',
-genre: '',
-url: row.preview
-}
-}
-})
-console.log(data.value)
-content.value=data.value
-navigateTo('/content/'+data.value.id)
-}
-else{
-  toast.add({ title: 'Login or Register to play a song',actions})
-}
+    const { data, status, error, refresh } = await useFetch('/api/content', {
+      method: "POST",
+      body: {
+        name: useCookie('username').value,
+        password: useCookie('password').value,
+        content: {
+          title: row.title,
+          artist: row.artist.name,
+          language: '',
+          genre: '',
+          url: row.preview
+        }
+      }
+    })
+    console.log(data.value)
+    content.value = data.value
+    navigateTo('/content/' + data.value.id)
+  }
+  else {
+    toast.add({ title: 'Login or Register to play a song', actions })
+  }
 }
 
-function logout(){
-useCookie('username').value=''
-useCookie('password').value=''
-console.log('logged out ')
+function logout() {
+  useCookie('username').value = ''
+  useCookie('password').value = ''
+  console.log('logged out ')
 
 }
 
