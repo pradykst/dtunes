@@ -2,6 +2,7 @@
 const playlistName = ref('')
 const content = useState('content', () => { })
 const userContent = useState('userContent', () => { })
+const router = useRouter()
 
 const isOpen = ref(false)
 const selected = ref()
@@ -80,14 +81,19 @@ console.log(error)
     <UFormGroup>
         <USelectMenu v-model="selected" :query="query" :options="playlists" placeholder="Select a playlist"
             searchable />
+        <br>
         <UButton @click="addToPlaylist">Add to selected Playlist</UButton>
 
+        
+
     </UFormGroup>
+    <br>    
 
 
     <div>
         <UButton icon="i-heroicons-pencil-square" size="sm" color="primary" variant="solid" label="Create Playlist"
             :trailing="false" @click="isOpen = true" />
+        
 
 
         <UModal v-model="isOpen">
@@ -108,11 +114,15 @@ console.log(error)
                     <Placeholder class="h-8" />
                     Create Playlist
                     <UButton icon="i-heroicons-check" size="sm" color="primary" square variant="solid"
-                        @click="newplaylist" />
+                        @click="newplaylist"  />
                 </template>
 
             </UCard>
         </UModal>
+    </div>
+    <br>
+    <div>
+        <button @click="$router.back()">Back</button>
     </div>
 
 </template>

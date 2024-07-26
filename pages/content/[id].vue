@@ -14,7 +14,11 @@
     
     <UButton @click='like(false)' icon="i-heroicons-hand-thumb-down" size="xl" color="red" square variant="solid" />
 
-    <UButton @click='playlist' icon="i-heroicons-plus" size="xl" color="yellow" square variant="solid" />
+    <UTooltip text="You need to like or dislike a song to add it to a playlist">
+        <UButton @click='playlist' icon="i-heroicons-plus" size="xl" color="yellow" square variant="solid" />
+    </UTooltip>
+
+    
 
     <p>
 
