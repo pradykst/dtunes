@@ -1,6 +1,7 @@
 <template>
   <!-- <h1>Index fad</h1> -->
    <br>
+   <div>
 
   <UButtonGroup size="xl" orientation="horizontal">
 
@@ -16,7 +17,7 @@
     <UButton @click="search" :ui="{ rounded: 'rounded-full' }">Search</UButton>
 
   </UButtonGroup>
-
+</div>
   <!-- <div>  
     <br>
     <UButton v-if="!useLogin()" to="/login">Login</UButton>

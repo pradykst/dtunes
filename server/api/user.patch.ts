@@ -17,18 +17,20 @@ export default defineEventHandler(async (event) => {
 
         },
     });
+    console.log(user)
 
     if(user){
 
-    
+            
     const update = await prisma.user.update({
         where: {
             id:user.id
         },
         data: {
-            password: body.newpwd
+            password: body.newPswd
         }
     })
+    console.log(update)
     return { status: 'ok', update }
 
 
