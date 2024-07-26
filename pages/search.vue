@@ -16,11 +16,11 @@
 
 </UButtonGroup>
 
-  <div>  
+  <!-- <div>  
     <br>
     <UButton v-if="!useLogin()" to="/login">Login</UButton>
     <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
-  </div>
+  </div> -->
 
   <!-- {{ searchResult }} -->
   <UTable :columns="columns" :rows=searchResult @select="select" />
