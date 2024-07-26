@@ -2,12 +2,16 @@
 
 
     <audio id="audio" src='' controls></audio>
+    <br>
 
-    <p>
+    <div style="font-size:25px;font-family:'Helvetica';">
 
         {{ content.artist + ': ' }}
         {{ content.title }}
-    </p>
+    </div>
+    
+    <div>
+        <br>
 
  
     <UButton @click='like(true)' icon="i-heroicons-hand-thumb-up" size="xl" color="primary" square variant="solid" />
@@ -17,6 +21,8 @@
     <UTooltip text="You need to like or dislike a song to add it to a playlist">
         <UButton @click='playlist' icon="i-heroicons-plus" size="xl" color="yellow" square variant="solid" />
     </UTooltip>
+
+  </div>
 
     
 

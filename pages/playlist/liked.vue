@@ -1,5 +1,6 @@
 <template>
-    Liked
+  <div style="font-size:20px;font-family:'Helvetica';">Liked</div>
+
 
     <div>
     <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play All</UButton>

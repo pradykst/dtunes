@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
+const toast = useToast()
 
 
 const schema = object({
@@ -38,14 +39,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     pwd.value=event.data.password
 
     await navigateTo('/')
+    toast.add({ title: 'Logged In Succesfully' })
 
   }
   else {
-    alert("invalid login credentials")
+     toast.add({ title: 'Invalid Login Credentials' })
   }
 
 
 }
+
 </script>
 
 <template>
@@ -58,12 +61,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput v-model="state.password" type="password" />
     </UFormGroup>
 
-    <UButton type="submit">
-      Submit
+    <UButton type="submit" block color="gray">
+      Login
     </UButton>
+    <UDivider
+    label="New User"
+    :ui="{ label: 'text-primary-500 dark:text-primary-400' }"
+  />
 
-    New User
-    <UButton to="/register">Register</UButton>
+
+    <UButton to="/register" block>Register</UButton>
 
 
   </UForm>

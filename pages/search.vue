@@ -6,8 +6,8 @@
 
 
   <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid" autocomplete="off"
-    :ui="{ icon: { trailing: { pointer: '' } } }">
-    <template #trailing>
+    :ui="{ icon: { trailing: { pointer: '' } } }" >
+    <template #trailing >
       <UButton v-show="q !== ''" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid" :padded="false"
         @click="q = ''" />
     </template>
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import useLogin from '~/composables/useLogin';
+const toast = useToast()
 
 const content = useState('content', () => { })
 const contentSearchTerm = useState('contentSearchTerm', () => { })
@@ -85,6 +86,14 @@ searchResult.value=contentSearchResult.value
 
 })
 
+const actions = ref([{
+  label: 'Login',
+  click: () => navigateTo('/login')
+}, {
+  label: 'Register',
+  click: () => navigateTo('register')
+}])
+
 
 async function select(row) {
 // alert(row.preview)
@@ -116,7 +125,7 @@ content.value=data.value
 navigateTo('/content/'+data.value.id)
 }
 else{
-navigateTo('/login')
+  toast.add({ title: 'Login or Register to play a song',actions})
 }
 }
 
@@ -126,4 +135,6 @@ useCookie('password').value=''
 console.log('logged out ')
 
 }
+
+
 </script>

@@ -2,6 +2,8 @@
 import { object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
 import { _placeholderOpacity } from '#tailwind-config/theme';
+const toast = useToast()
+
 
 const schema = object({
   // email: string().email('Invalid email').required('Required'),
@@ -45,10 +47,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     pwd.value=event.data.password
 
     await navigateTo('/')
+    toast.add({ title: 'Registered In Succesfully' })
 
   }
   else {
-    alert("Something went wrong")
+    toast.add({ title: 'Something Went Wrong' })
   }
 
 
@@ -57,12 +60,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Username" name="username">
+    <UFormGroup label="Username" name="username" >
       <UInput v-model="state.username" />
     </UFormGroup>
 
     <UFormGroup label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
+      <UInput v-model="state.password" type="password" placeholder="Minimum 8 characters"/>
     </UFormGroup>
 
     <UFormGroup label="Your Name" name="name">
@@ -70,7 +73,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UFormGroup>
 
     <UFormGroup label="Photo" name="photo">
-      <UInput v-model="state.photourl"  />
+      <UInput v-model="state.photourl"  placeholder="Not Required"/>
     </UFormGroup>
 
     <UButton type="submit">

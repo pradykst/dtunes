@@ -1,6 +1,10 @@
 <template>
 
+  <div style="font-size:20px;font-family:'Helvetica';">
+
   {{ server_usercontent ? (server_usercontent[0]?.playlist?.name) : '' }}
+  
+</div>
 
   <div>
     <UButton icon="i-heroicons-play" color="black" variant="solid" @click="playPlaylist">Play All</UButton>

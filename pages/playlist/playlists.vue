@@ -1,5 +1,5 @@
 <template>
-    <p>All playlists</p>
+    <p style="font-size:25px;font-family:'Helvetica';">All Playlists</p>
 
     <UCard v-for="playlist in server_playlists"> 
        

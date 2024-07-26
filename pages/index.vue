@@ -5,71 +5,80 @@
 
 
   <UButton v-if="!useLogin()" to="/login">Login</UButton>
-  
+
 
   <h1 style="font-size:45px;font-family:'Helvetica';">DTunes</h1>
 
 
   <div>
-    <div ><UButton label="Open" @click="isOpen = true" /></div>
-    
+    <UButton label="Open" @click="isOpen = true" color="gray" variant="solid" size="lg" />
 
     <USlideover v-model="isOpen">
-      <div class="p-4 flex-1">
-        <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-x-mark-20-solid"
-          class="flex sm:hidden absolute end-5 top-5 z-10" square padded @click="isOpen = false" />
-          <UButton to="/search" icon="i-heroicons-magnifying-glass" size="xl" color="primary" square variant="solid">Search</UButton>
-        <Placeholder class="h-full" />
-      </div>
-      <div>
-        <UButton v-if="useLogin()" @click="logout()">Logout</UButton>
-      </div>
-    </USlideover>
-  </div> 
+      <UCard class="flex flex-col flex-1"
+        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+              DTunes
+            </h3>
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+              @click="isOpen = false" />
+          </div>
+        </template>
 
-  <div> 
+
+        <UVerticalNavigation :links="links" class="w-full" :ui="{
+          label: 'truncate relative text-gray-900 dark:text-white flex-initial w- text-left'
+        }" />
+
+        <Placeholder class="h-full" />
+      </UCard>
+    </USlideover>
+  </div>
+
+  <div>
     <br>
     <p style="font-size:25px;">Playlists</p>
-    
+
     <br>
 
     <UCard>
 
-    <template #header>
-      <Placeholder class="h-8" />
-      Liked Songs
-    </template>
+      <template #header>
+        <Placeholder class="h-8" />
+        Liked Songs
+      </template>
 
-    <Placeholder class="h-32" />
-    <UButton v-if='useLogin()' to="/playlist/liked">Show</UButton>
+      <Placeholder class="h-32" />
+      <UButton v-if='useLogin()' to="/playlist/liked">Show</UButton>
 
-  </UCard>  
+    </UCard>
 
-  <br>
- 
+    <br>
 
-  <UCard>
-    <template #header>
-      <Placeholder class="h-8" />
-      Disliked songs
-    </template>
 
-    <Placeholder class="h-32" />
-    <UButton v-if='useLogin()' to="/playlist/disliked">Show</UButton>
+    <UCard>
+      <template #header>
+        <Placeholder class="h-8" />
+        Disliked songs
+      </template>
 
-  
-  </UCard>  
-  <br>
-  <UCard>
-    <template #header>
-      All Playlists
-      <Placeholder class="h-8" />
-    </template>
+      <Placeholder class="h-32" />
+      <UButton v-if='useLogin()' to="/playlist/disliked">Show</UButton>
 
-    <Placeholder class="h-32" />
-    <UButton v-if='useLogin()' to="playlist/playlists">Other</UButton>
 
-  </UCard>  
+    </UCard>
+    <br>
+    <UCard>
+      <template #header>
+        All Playlists
+        <Placeholder class="h-8" />
+      </template>
+
+      <Placeholder class="h-32" />
+      <UButton v-if='useLogin()' to="playlist/playlists">Other</UButton>
+
+    </UCard>
   </div>
 
 
@@ -89,6 +98,43 @@ const content = useState('content', () => { })
 const contentSearchTerm = useState('contentSearchTerm', () => { })
 const contentSearchResult = useState('searchResult', () => { })
 
+function click() {
+  if (useLogin()) {
+    logout()
+    navigateTo('/login')
+  }
+}
+
+const links = [
+  [{
+    label: 'Profile',
+    to: '/profile',
+    icon: 'i-heroicons-user',
+    badge: 'User'
+  }, {
+    label: 'Playlists',
+    icon: 'i-heroicons-play',
+    to: `/playlist/playlists`
+  }
+  ],
+  [{
+    label: 'Search',
+    icon: 'i-heroicons-magnifying-glass',
+    to: '/search'
+  }],
+
+
+  [{
+    label: 'Settings',
+    icon: 'i-heroicons-cog-6-tooth',
+    to: '/settings'
+  }, {
+    label: 'Logout',
+    icon: 'i-heroicons-user-minus',
+    click
+
+  }]
+]
 
 const columns = [{
   key: 'title',
